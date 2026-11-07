@@ -276,5 +276,30 @@ body.brand-atelier{background:#f8f2e8}
   window.addEventListener('scroll',refreshCta,{passive:true});window.addEventListener('resize',refreshCta);refreshCta();
 })();
 </script>
+
+<!-- anti-clump: жодного негативного трекінгу (літери не злипаються) -->
+<script>
+(function(){
+  var MIN = 0.01; // мінімальний просвіт в em
+  function fix(){
+    var nodes = document.querySelectorAll('body *');
+    for (var i=0;i<nodes.length;i++){
+      var el = nodes[i];
+      if (el.tagName === 'SCRIPT' || el.tagName === 'STYLE' || el.tagName === 'SVG' || el.closest('svg')) continue;
+      var cs = getComputedStyle(el);
+      var ls = parseFloat(cs.letterSpacing);
+      if (ls < 0){
+        var fs = parseFloat(cs.fontSize) || 16;
+        el.style.setProperty('letter-spacing', (fs*MIN).toFixed(2)+'px', 'important');
+      }
+      var ws = parseFloat(cs.wordSpacing);
+      if (ws < 0) el.style.setProperty('word-spacing', '0px', 'important');
+    }
+  }
+  if (document.readyState !== 'loading') fix(); else document.addEventListener('DOMContentLoaded', fix);
+  window.addEventListener('load', fix);
+  setTimeout(fix, 1200);
+})();
+</script>
 </body>
 </html>
